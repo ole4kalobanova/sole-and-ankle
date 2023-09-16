@@ -32,7 +32,7 @@ const Wrapper = styled.div`
   justify-content: space-around;
   padding-left: 32px;
   padding-right: 32px;
-  height: 40px;
+  min-height: 40px;
   align-items: center;
   gap: 24px; 
 `;
