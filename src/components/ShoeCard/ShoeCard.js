@@ -31,6 +31,17 @@ const ShoeCard = ({
       ? 'new-release'
       : 'default'
 
+  const infoColours = {
+    'on-sale': {
+      text: 'Sale',
+      color: COLORS.primary
+    },
+    'new-release': {
+      text: 'Just Released!',
+      color: COLORS.secondary
+    },
+  }
+
   return (
     <Link href={`/shoe/${slug}`}>
       <Wrapper>
@@ -40,11 +51,24 @@ const ShoeCard = ({
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
-          <Price>{formatPrice(price)}</Price>
+          <Price
+            color={variant === "on-sale" ? COLORS.gray[700] : ''}
+            lineThrough={variant === "on-sale" ? 'line-through' : 'none'}
+          >
+            {formatPrice(price)}
+          </Price>
         </Row>
         <Row>
           <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
+          {
+            variant === "on-sale" &&
+            <SalePrice>{formatPrice(salePrice)}</SalePrice>
+          }
         </Row>
+         {/* The first solution based on var infoColours */}
+        {/* <Info color={infoColours[variant].color}>{infoColours[variant].text}</Info> */}
+        {variant === "on-sale" && <SaleInfo>{infoColours[variant].text}</SaleInfo>}
+        {variant === "new-release" && <NewInfo>{infoColours[variant].text}</NewInfo>}
       </Wrapper>
     </Link>
   );
@@ -55,7 +79,30 @@ const Link = styled.a`
   color: inherit;
 `;
 
+const Info = styled.div`
+  /*background-color: ${props => props.color};*/
+  border-radius: 2px;
+  color: ${COLORS.white};
+  font-size: ${14 / 16}rem;
+  font-weight: ${WEIGHTS.bold};
+  padding: 0px 10px ;
+  position: absolute;
+  top: 12px;
+  right: -4px;
+  line-height: 32px;
+  height: 32px;
+`;
+
+// The second solution based on Info tag (without var infoColours)
+const NewInfo = styled(Info)`
+  background-color: ${COLORS.secondary};
+`;
+const SaleInfo = styled(Info)`
+  background-color: ${COLORS.primary};
+`;
+
 const Wrapper = styled.article`
+  position: relative;
 `;
 
 const ImageWrapper = styled.div`
@@ -65,10 +112,15 @@ const ImageWrapper = styled.div`
 const Image = styled.img`
   /* new styles */
   width: 100%;
+  border-radius: 16px 16px 4px 4px;
 `;
 
 const Row = styled.div`
   font-size: 1rem;
+
+  /* new styles */
+  display: flex;
+  justify-content: space-between;
 `;
 
 const Name = styled.h3`
@@ -76,7 +128,11 @@ const Name = styled.h3`
   color: ${COLORS.gray[900]};
 `;
 
-const Price = styled.span``;
+const Price = styled.span`
+  /* new styles */
+  color: ${props => props.color};
+  text-decoration: ${props => props.lineThrough};
+`;
 
 const ColorInfo = styled.p`
   color: ${COLORS.gray[700]};
